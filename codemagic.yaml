@@ -16,4 +16,3 @@ workflows:
       email:
         recipients:
           - djdreamfix@gmail.com
-        on_build_success: true
