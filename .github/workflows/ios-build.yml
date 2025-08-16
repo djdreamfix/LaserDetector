@@ -1,0 +1,50 @@
+name: iOS Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+
+      - name: Install Bundler
+        run: gem install bundler
+
+      - name: Install CocoaPods
+        run: sudo gem install cocoapods
+
+      - name: Install dependencies
+        run: |
+          pod install --project-directory=LaserDetector-Stylish-Advanced || true
+
+      - name: Build .ipa
+        run: |
+          xcodebuild \
+            -workspace LaserDetector-Stylish-Advanced/LaserDetector.xcworkspace \
+            -scheme LaserDetector \
+            -sdk iphoneos \
+            -configuration Release \
+            archive -archivePath $PWD/build/LaserDetector.xcarchive
+
+          xcodebuild \
+            -exportArchive \
+            -archivePath $PWD/build/LaserDetector.xcarchive \
+            -exportOptionsPlist LaserDetector-Stylish-Advanced/ExportOptions.plist \
+            -exportPath $PWD/build
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v3
+        with:
+          name: LaserDetector
+          path: build/*.ipa
