@@ -44,7 +44,7 @@ jobs:
             -exportPath $PWD/build
 
       - name: Upload IPA
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: LaserDetector
           path: build/*.ipa
