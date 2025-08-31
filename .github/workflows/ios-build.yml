@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14  # або macos-13, залежно від того, що доступно
+    runs-on: macos-13  # або macos-13, залежно від того, що доступно
 
     steps:
       - name: Checkout repository
