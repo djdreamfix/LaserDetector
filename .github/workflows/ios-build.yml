@@ -1,50 +1,61 @@
 name: iOS Build
 
 on:
+  workflow_dispatch: # запуск вручну
   push:
     branches:
       - main
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-14  # або macos-13, залежно від того, що доступно
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app
 
-      - name: Install Bundler
-        run: gem install bundler
-
-      - name: Install CocoaPods
-        run: sudo gem install cocoapods
-
-      - name: Install dependencies
+      - name: Install CocoaPods (if needed)
         run: |
-          pod install --project-directory=LaserDetector-Stylish-Advanced || true
+          if [ -f "LaserDetector-Stylish-Advanced/Podfile" ]; then
+            sudo gem install cocoapods
+            cd LaserDetector-Stylish-Advanced
+            pod install
+          fi
 
-      - name: Build .ipa
+      - name: Build archive
         run: |
-          xcodebuild \
-            -workspace LaserDetector-Stylish-Advanced/LaserDetector.xcworkspace \
-            -scheme LaserDetector \
-            -sdk iphoneos \
-            -configuration Release \
-            archive -archivePath $PWD/build/LaserDetector.xcarchive
+          cd LaserDetector-Stylish-Advanced
+          if [ -d "LaserDetector.xcworkspace" ]; then
+            xcodebuild \
+              -workspace LaserDetector.xcworkspace \
+              -scheme LaserDetector \
+              -sdk iphoneos \
+              -configuration Release \
+              archive \
+              -archivePath $GITHUB_WORKSPACE/build/LaserDetector.xcarchive
+          else
+            xcodebuild \
+              -project LaserDetector.xcodeproj \
+              -scheme LaserDetector \
+              -sdk iphoneos \
+              -configuration Release \
+              archive \
+              -archivePath $GITHUB_WORKSPACE/build/LaserDetector.xcarchive
+          fi
 
+      - name: Export IPA
+        run: |
           xcodebuild \
             -exportArchive \
-            -archivePath $PWD/build/LaserDetector.xcarchive \
-            -exportOptionsPlist LaserDetector-Stylish-Advanced/ExportOptions.plist \
-            -exportPath $PWD/build
+            -archivePath $GITHUB_WORKSPACE/build/LaserDetector.xcarchive \
+            -exportOptionsPlist exportOptions.plist \
+            -exportPath $GITHUB_WORKSPACE/build/ipa
 
-      - name: Upload IPA
+      - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: LaserDetector
-          path: build/*.ipa
+          name: LaserDetector-ipa
+          path: build/ipa/*.ipa
