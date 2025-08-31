@@ -19,15 +19,15 @@ jobs:
 
       - name: Install CocoaPods (if Podfile exists)
         run: |
-          if [ -f "LaserDetector-Stylish-Advanced/Podfile" ]; then
+          if [ -f "LaserDetector/Podfile" ]; then
             sudo gem install cocoapods
-            cd LaserDetector-Stylish-Advanced
+            cd LaserDetector
             pod install
           fi
 
       - name: Build archive
         run: |
-          cd LaserDetector-Stylish-Advanced
+          cd LaserDetector
           if [ -d "LaserDetector.xcworkspace" ]; then
             xcodebuild \
               -workspace LaserDetector.xcworkspace \
