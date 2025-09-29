@@ -2,31 +2,31 @@
 import PackageDescription
 
 let package = Package(
-    name: "MyAwesomePackage",
+    name: "LaserDetectorPackage",
     platforms: [
         .macOS(.v10_15),
         .iOS(.v13),
     ],
     products: [
         .library(
-            name: "MyAwesomeLibrary",
-            targets: ["MyAwesomeLibrary"]),
+            name: "LaserDetector",
+            targets: ["LaserDetector"]),
         .executable(
-            name: "MyAwesomeTool",
-            targets: ["MyAwesomeTool"]),
+            name: "LaserDetectorTool",
+            targets: ["LaserDetectorTool"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
     ],
     targets: [
         .target(
-            name: "MyAwesomeLibrary",
+            name: "LaserDetector",
             dependencies: []),
         .executableTarget(
-            name: "MyAwesomeTool",
-            dependencies: ["MyAwesomeLibrary", .product(name: "ArgumentParser", package: "swift-argument-parser")]),
+            name: "LaserDetectorTool",
+            dependencies: ["LaserDetector", .product(name: "ArgumentParser", package: "swift-argument-parser")]),
         .testTarget(
-            name: "MyAwesomeLibraryTests",
-            dependencies: ["MyAwesomeLibrary"]),
+            name: "LaserDetectorTests",
+            dependencies: ["LaserDetector"]),
     ]
 )
