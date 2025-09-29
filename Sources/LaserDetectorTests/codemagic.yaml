@@ -1,0 +1,18 @@
+workflows:
+  ios-laser-detector:
+    name: Laser Detector iOS
+    max_build_duration: 60
+    environment:
+      vars:
+        FLUTTER_BUILD_MODE: "release"
+    scripts:
+      - name: Install dependencies
+        script: echo "No dependencies needed for pure SwiftUI project"
+      - name: Build iOS app
+        script: xcodebuild -scheme LaserDetectorApp -sdk iphoneos -configuration Release clean build
+    artifacts:
+      - build/Release-iphoneos/LaserDetector.ipa
+    publishing:
+      email:
+        recipients:
+          - djdreamfix@gmail.com
