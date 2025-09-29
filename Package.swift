@@ -12,8 +12,8 @@ let package = Package(
             name: "LaserDetector",
             targets: ["LaserDetector"]),
         .executable(
-            name: "LaserDetectorTool",
-            targets: ["LaserDetectorTool"]),
+            name: "LaserDetector",
+            targets: ["LaserDetector"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
@@ -23,7 +23,7 @@ let package = Package(
             name: "LaserDetector",
             dependencies: []),
         .executableTarget(
-            name: "LaserDetectorTool",
+            name: "LaserDetector",
             dependencies: ["LaserDetector", .product(name: "ArgumentParser", package: "swift-argument-parser")]),
         .testTarget(
             name: "LaserDetectorTests",
